@@ -20,5 +20,5 @@ def saved_tracks():
 
 
 if __name__ == '__main__':
-    spotify = SpotifyService(scope='user-read-recently-played user-library-read')
+    spotify = SpotifyService(scope='user-read-recently-played user-library-read playlist-modify-public playlist-modify-private')
     app.run(host=HOST, port=PORT)
