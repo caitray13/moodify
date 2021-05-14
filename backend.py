@@ -1,3 +1,4 @@
+from moodify import Moodify
 from flask import Flask, request
 import json
 import os
@@ -17,6 +18,14 @@ def home():
 def saved_tracks():
     saved_tracks = {'results': spotify.get_saved_tracks()}
     return saved_tracks
+
+@app.route("/createplaylist")
+def create_mood_playlist():
+    name = request.args.get('name')
+    max_valence = request.args.get('max_valence')
+    min_valence = request.args.get('min_valence')
+    num_tracks = request.args.get('num_tracks')
+    return spotify.create_playlist(name, max_valence, min_valence, num_tracks)
 
 
 if __name__ == '__main__':
