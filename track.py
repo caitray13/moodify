@@ -1,8 +1,9 @@
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
+
 @dataclass
-class Track():
+class Track:
     """ Object class for represeting a track on Spotify"""
     track_id: str
     track_uri: str
