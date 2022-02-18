@@ -8,7 +8,7 @@ from track import Track
 
 @dataclass
 class RecordCollection:
-    __tracks: List[Track]
+    tracks: List[Track]
 
     def __init__(self, spotifyService: SpotifyService) -> None:
         self.spotifyService = spotifyService
@@ -19,8 +19,8 @@ class RecordCollection:
                        *self.spotifyService.current_user_saved_album_tracks(),
                        *self.spotifyService.current_user_recently_played()]
 
-    def get_tracks(self) -> List[Dict[Track]]:
-        return [asdict(track) for track in self.__tracks]
+    def get_tracks(self) -> List[Dict]:
+        return [asdict(track) for track in self.tracks]
 
 
 

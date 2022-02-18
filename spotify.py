@@ -19,6 +19,11 @@ class SpotifyService:
         self.spotipyClient = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=self.scope))
 
     def current_user_recently_played(self) -> List[Track]:
+        """
+        Returns users last 50 listened to tracks.
+        :return:
+        saved_tracks: List[Track]
+        """
         r = self.spotipyClient.current_user_recently_played(limit=LIMIT)
         saved_tracks = []
         for idx, item in enumerate(r['items']):
@@ -27,6 +32,11 @@ class SpotifyService:
         return saved_tracks
 
     def current_user_saved_tracks(self) -> List[Track]:
+        """
+        Returns the user's last 50 saved tracks.
+        :return:
+        saved_tracks: List[Track]
+        """
         r = self.spotipyClient.current_user_saved_tracks(limit=LIMIT)
         saved_tracks = []
         for idx, item in enumerate(r['items']):
@@ -35,6 +45,11 @@ class SpotifyService:
         return saved_tracks
 
     def current_user_saved_album_tracks(self) -> List[Track]:
+        """
+        Return all the tracks of the user's last 50 saved albums.
+        :return:
+        saved_tracks: List[Track]
+        """
         r = self.spotipyClient.current_user_saved_albums(limit=LIMIT)
         saved_tracks = []
         for idx, album in enumerate(r['items']):
@@ -43,8 +58,16 @@ class SpotifyService:
             saved_tracks = [*saved_tracks, *album_tracks]
         return saved_tracks
 
-    def get_audio_analysis(self, tracks) -> Dict:
-        track_uris = [track['track_uri'] for track in tracks]
+    def get_audio_features(self, tracks) -> Dict:
+        # TODO: extract other features
+        """
+        Returns the audio analysis of each track (as given by Spotify)
+        :param tracks:
+        tracks: List[Track]
+        :return:
+        Dict
+        """
+        track_uris = [track.track_uri for track in tracks]
         r = []
         for chunk in chunks(track_uris, LIMIT):
             r = [*r, *self.spotipyClient.audio_features(tracks=chunk)]
@@ -53,11 +76,12 @@ class SpotifyService:
 
     def make_playlist(self, name, tracks):
         p_response = self._create_playlist(name)
+        # need the id (rather than name) to add songs later
         playlist_id = p_response['id']
-        self._add_songs_to_playlist(playlist_id=playlist_id, items=tracks)
+        return self._add_songs_to_playlist(playlist_id=playlist_id, items=tracks)
 
     def _create_playlist(self, name):
-        return self.spotipyClient.user_playlist_create(user='<INSERT_USERNAME>',
+        return self.spotipyClient.user_playlist_create(user='',
                                                        name=name,
                                                        public=True,
                                                        collaborative=False,
