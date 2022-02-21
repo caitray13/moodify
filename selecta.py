@@ -4,7 +4,7 @@ from record_collection import RecordCollection
 from spotify import SpotifyService
 
 
-class Selector:
+class Selecta:
     """Personalization logic."""
     def __init__(self, spotifyService: SpotifyService, recordCollection: RecordCollection) -> None:
         self.spotifyService = spotifyService

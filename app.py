@@ -4,7 +4,7 @@ from typing import Dict
 from flask import Flask, request, render_template
 
 from record_collection import RecordCollection
-from selector import Selector
+from selecta import Selecta
 from spotify import SpotifyService
 
 
@@ -54,5 +54,5 @@ if __name__ == '__main__':
     spotifyService = SpotifyService(
         scope='user-read-recently-played user-library-read playlist-modify-public')
     recordCollection = RecordCollection(spotifyService)
-    selector = Selector(spotifyService, recordCollection)
+    selector = Selecta(spotifyService, recordCollection)
     app.run(host=HOST, port=PORT)
