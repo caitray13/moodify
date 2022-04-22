@@ -1,7 +1,6 @@
 import logging
 
 import boto3
-import pandas as pd
 
 from spotify import SpotifyService
 from record_collection import RecordCollection

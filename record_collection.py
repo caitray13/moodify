@@ -11,9 +11,9 @@ class RecordCollection:
     tracks: Optional[List[Track]] = field(default_factory=list)
 
     def build_collection(self, spotifyService):
-        self.tracks = [*self.spotifyService.current_user_saved_tracks(),
-                       *self.spotifyService.current_user_saved_album_tracks(),
-                       *self.spotifyService.current_user_recently_played()]
+        self.tracks = [*spotifyService.current_user_saved_tracks(),
+                       *spotifyService.current_user_saved_album_tracks(),
+                       *spotifyService.current_user_recently_played()]
 
     def get_tracks(self) -> List[Dict]:
         return [asdict(track) for track in self.tracks]

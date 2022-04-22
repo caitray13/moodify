@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Dict
 
@@ -10,7 +11,7 @@ from spotify import SpotifyService
 
 app = Flask(__name__)
 
-PORT = int(os.getenv('PORT', 8080))
+PORT = int(os.getenv('PORT', 5000))
 HOST = os.getenv('HOST', 'localhost')
 
 
@@ -51,8 +52,12 @@ def create_moody_playlist():
 
 
 if __name__ == '__main__':
+    logging.info('Connecting to Spotify...')
     spotifyService = SpotifyService(
         scope='user-read-recently-played user-library-read playlist-modify-public')
+    logging.info('Spinning up record collection...')
     recordCollection = RecordCollection(spotifyService)
     selector = Selecta(spotifyService, recordCollection)
-    app.run(host=HOST, port=PORT)
+    logging.info('Rude boi selecta is ready for requests!')
+    #app.run(host=HOST, port=PORT)
+    app.run(host='0.0.0.0', port=PORT)

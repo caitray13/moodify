@@ -1,5 +1,6 @@
 import random
 
+from lda_model import LdaModel
 from record_collection import RecordCollection
 from spotify import SpotifyService
 
@@ -20,3 +21,19 @@ class Selecta:
                 filtered_tracks.append(track)
         tracks_to_add_to_playlist = random.sample(filtered_tracks, min(int(num_tracks), len(filtered_tracks)))
         return self.spotifyService.make_playlist(playlist_name, tracks_to_add_to_playlist)
+    
+    def create_similar_lyrics_playlist(self, track_name, artist_name, num_tracks):
+        """
+        Recommend songs based on topic similarity using LDA.
+        :param track_name:
+        track_name: str
+        :param artist_name:
+        artist_name: str
+        :param num_tracks:
+        num_tracks: int
+        :return:
+        track_uris: List[str]
+        """
+        lda = LdaModel(self.recordCollection)
+        track_recommendation_uris = lda.get_recommendations(track_name, artist_name, num_tracks)
+        return recommendations
