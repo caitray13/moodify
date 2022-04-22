@@ -1,5 +1,5 @@
 from dataclasses import dataclass, asdict, field
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from spotify import SpotifyService
 
@@ -8,13 +8,9 @@ from track import Track
 
 @dataclass
 class RecordCollection:
-    spotifyService: SpotifyService
-    tracks: List[Track] = field(init=False)
+    tracks: Optional[List[Track]] = field(default_factory=list)
 
-    def __post_init__(self) -> None:
-        self._build_collection()
-
-    def _build_collection(self):
+    def build_collection(self, spotifyService):
         self.tracks = [*self.spotifyService.current_user_saved_tracks(),
                        *self.spotifyService.current_user_saved_album_tracks(),
                        *self.spotifyService.current_user_recently_played()]
