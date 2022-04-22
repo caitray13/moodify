@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from typing import Dict, List
 
 from spotify import SpotifyService
@@ -8,10 +8,10 @@ from track import Track
 
 @dataclass
 class RecordCollection:
-    tracks: List[Track]
+    spotifyService: SpotifyService
+    tracks: List[Track] = field(init=False)
 
-    def __init__(self, spotifyService: SpotifyService) -> None:
-        self.spotifyService = spotifyService
+    def __post_init__(self) -> None:
         self._build_collection()
 
     def _build_collection(self):
@@ -21,6 +21,9 @@ class RecordCollection:
 
     def get_tracks(self) -> List[Dict]:
         return [asdict(track) for track in self.tracks]
+    
+    def __str__(self):
+        return f"Record collection made up of {len(self.tracks)} songs."
 
 
 
