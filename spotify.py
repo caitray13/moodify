@@ -73,25 +73,26 @@ class SpotifyService:
             r = [*r, *self.spotipyClient.audio_features(tracks=chunk)]
         saved_tracks_audio_analysis = dict(zip(track_uris, r))
         return saved_tracks_audio_analysis
-
+    
     def make_playlist(self, name, tracks):
-        p_response = self._create_playlist(name)
+        p_response = self.__create_playlist(name)
         # need the id (rather than name) to add songs later
         playlist_id = p_response['id']
-        return self._add_songs_to_playlist(playlist_id=playlist_id, items=tracks)
+        return self.__add_songs_to_playlist(playlist_id=playlist_id, items=tracks)
 
-    def _create_playlist(self, name):
+    def __create_playlist(self, name):
         return self.spotipyClient.user_playlist_create(user='',
                                                        name=name,
                                                        public=True,
                                                        collaborative=False,
                                                        description='Testing')
 
-    def _add_songs_to_playlist(self, playlist_id, items):
+    
+    def __add_songs_to_playlist(self, playlist_id, items):
         return self.spotipyClient.playlist_add_items(playlist_id, items, position=None)
 
     @staticmethod
-    def _create_track(item):
+    def __create_track(item):
         track = Track(track_id=item['track']['id'],
                       track_uri=item['track']['uri'],
                       track_name=item['track']['name'],

@@ -1,2 +1,7 @@
+boto3
 flask
+lyricsgenius
+numpy
+scikit-learn
+spacy
 spotipy

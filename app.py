@@ -1,7 +1,9 @@
 import logging
 import os
+import re
 from typing import Dict
 
+import boto3
 from flask import Flask, request, render_template
 
 from record_collection import RecordCollection
@@ -13,6 +15,9 @@ app = Flask(__name__)
 
 PORT = int(os.getenv('PORT', 5000))
 HOST = os.getenv('HOST', 'localhost')
+
+DYNAMODB = boto3.resource('dynamodb')
+TABLE = DYNAMODB.Table('SpotificationLyrics')
 
 
 @app.route("/")
@@ -39,25 +44,43 @@ def audio_analysis():
     return audio_analysis
 
 
-@app.route("/createplaylist")
+@app.route("/createplaylist/<type>")
+def create_playlist(type):
+    match type:
+        case "moody":
+            return create_moody_playlist()
+        case "lyrics":
+            return create_lyrics_playlist()
+        case _:
+            return "That's not a type of playlist we can do."
+
+
 def create_moody_playlist():
     playlist_name = request.args.get('playlist_name')
     max_valence = request.args.get('max_valence')
     min_valence = request.args.get('min_valence')
-    num_tracks = request.args.get('num_tracks')
+    num_tracks = request.args.get('num_tracks', type=int)
     return selector.create_moody_playlist(playlist_name,
                                           max_valence,
                                           min_valence,
                                           num_tracks)
 
 
+def create_lyrics_playlist():
+    track_name = request.args.get('track_name')
+    artist_name = request.args.get('artist_name')
+    num_tracks = request.args.get('num_tracks', type=int)
+    return selector.create_similar_lyrics_playlist(track_name, artist_name, num_tracks)    
+
+
 if __name__ == '__main__':
     logging.info('Connecting to Spotify...')
     spotifyService = SpotifyService(
         scope='user-read-recently-played user-library-read playlist-modify-public')
-    logging.info('Spinning up record collection...')
-    recordCollection = RecordCollection(spotifyService)
+    spotify_id = spotifyService.spotipyClient.current_user()["id"]
+    logging.info(f'Spinning up record collection for {spotify_id}...')
+    recordCollection = RecordCollection()
+    recordCollection.build_collection(spotifyService, spotify_id) 
     selector = Selecta(spotifyService, recordCollection)
     logging.info('Rude boi selecta is ready for requests!')
-    #app.run(host=HOST, port=PORT)
     app.run(host='0.0.0.0', port=PORT)
