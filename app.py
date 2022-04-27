@@ -1,23 +1,20 @@
 import logging
 import os
-import re
 from typing import Dict
 
-import boto3
 from flask import Flask, request, render_template
 
 from record_collection import RecordCollection
 from selecta import Selecta
 from spotify import SpotifyService
 
+logging.basicConfig(level = logging.INFO)
+
 
 app = Flask(__name__)
 
 PORT = int(os.getenv('PORT', 5000))
 HOST = os.getenv('HOST', 'localhost')
-
-DYNAMODB = boto3.resource('dynamodb')
-TABLE = DYNAMODB.Table('SpotificationLyrics')
 
 
 @app.route("/")
@@ -70,7 +67,7 @@ def create_lyrics_playlist():
     track_name = request.args.get('track_name')
     artist_name = request.args.get('artist_name')
     num_tracks = request.args.get('num_tracks', type=int)
-    return selector.create_similar_lyrics_playlist(track_name, artist_name, num_tracks)    
+    return selector.create_similar_lyrics_playlist(spotify_id, track_name, artist_name, num_tracks)    
 
 
 if __name__ == '__main__':

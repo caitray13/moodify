@@ -3,7 +3,6 @@ from typing import Dict, List, Optional
 
 import boto3
 
-from spotify import SpotifyService
 from track import Track
 import utils
 
@@ -15,7 +14,7 @@ def already_user(spotify_id):
     response = TABLE.query(
         KeyConditionExpression=boto3.dynamodb.conditions.Key('spotify_id').eq(spotify_id)
     )
-    if response['Count']>0:
+    if response['Count'] > 0:
         return True
     else:
         return False

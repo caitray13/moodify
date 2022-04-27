@@ -4,8 +4,6 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import spacy
 
-import utils
-
 sp = spacy.load('en_core_web_sm')
 STOPWORDS = sp.Defaults.stop_words
 N_TOPICS = 5
@@ -42,7 +40,8 @@ class LdaModel():
         track_artist_idx = dict((y,x) for x,y in dict(enumerate(zip(self.track_names, self.artist_names))).items())
         idx = track_artist_idx[(track_name, artist_name)]
         similar_idx = np.argsort(similarity_matrix[idx])[::-1][1:num+1]
-        return [(self.track_names[i], self.artist_names[i]) for i in similar_idx]
+        print([(self.track_names[i], self.artist_names[i]) for i in similar_idx])
+        return [self.track_uris[i]for i in similar_idx]
 
 
     def get_recommendations(self, track_name, artist_name, num_tracks):

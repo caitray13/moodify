@@ -7,7 +7,7 @@ from record_collection import RecordCollection
 import utils
 
 from botocore.exceptions import ClientError
-logger = logging.getLogger(__name__)
+logging.basicConfig(level = logging.INFO)
 
 DYNAMODB = boto3.resource('dynamodb')
 TABLE = DYNAMODB.Table('SpotificationLyrics')

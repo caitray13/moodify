@@ -74,15 +74,15 @@ class SpotifyService:
         saved_tracks_audio_analysis = dict(zip(track_uris, r))
         return saved_tracks_audio_analysis
     
-    def make_playlist(self, name, tracks):
-        p_response = self.__create_playlist(name)
+    def make_playlist(self, spotify_id, playlist_name, tracks):
+        p_response = self.__create_playlist(spotify_id, playlist_name)
         # need the id (rather than name) to add songs later
         playlist_id = p_response['id']
         return self.__add_songs_to_playlist(playlist_id=playlist_id, items=tracks)
 
-    def __create_playlist(self, name):
-        return self.spotipyClient.user_playlist_create(user='',
-                                                       name=name,
+    def __create_playlist(self, spotify_id, playlist_name):
+        return self.spotipyClient.user_playlist_create(user=spotify_id,
+                                                       name=playlist_name,
                                                        public=True,
                                                        collaborative=False,
                                                        description='Testing')

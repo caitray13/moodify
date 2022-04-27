@@ -13,7 +13,7 @@ class Selecta:
 
     def create_moody_playlist(self, playlist_name, max_valence, min_valence, num_tracks):
         """
-        Recommend songs based on Spotify given label, valence.
+        Recommend songs based on Spotify given label; valence.
         :param playlist_name:
         playlist_name: str
         :param max_valence:
@@ -35,7 +35,7 @@ class Selecta:
         tracks_to_add_to_playlist = random.sample(filtered_tracks, min(num_tracks, len(filtered_tracks)))
         return self.spotifyService.make_playlist(playlist_name, tracks_to_add_to_playlist)
     
-    def create_similar_lyrics_playlist(self, track_name, artist_name, num_tracks):
+    def create_similar_lyrics_playlist(self, spotify_id, track_name, artist_name, num_tracks):
         """
         Recommend songs based on topic similarity using LDA.
         :param track_name:
@@ -50,9 +50,7 @@ class Selecta:
         if self.recordCollection.record_in_collection(track_name, artist_name):
             lda = LdaModel(self.recordCollection)
             track_recommendation_uris = lda.get_recommendations(track_name, artist_name, num_tracks)
-            return str(track_recommendation_uris)
-            #playlist_name = f"similar_to_{track_name}_by_{artist_name}"
-            #return self.spotifyService.make_playlist(playlist_name, track_recommendation_uris)
+            playlist_name = f"Similar to {track_name} by {artist_name}"
+            return self.spotifyService.make_playlist(spotify_id, playlist_name, track_recommendation_uris)
         else:
             return "This record isn't in the collection, please choose another."
-    
