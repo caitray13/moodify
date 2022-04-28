@@ -1,7 +1,9 @@
 boto3
 flask
+flask-cors
 lyricsgenius
 numpy
+pandas
 scikit-learn
 spacy
 spotipy

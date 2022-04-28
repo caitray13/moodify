@@ -1,9 +1,11 @@
+import logging
 import random
 
 from lda_model import LdaModel
 from record_collection import RecordCollection
 from spotify import SpotifyService
 
+logging.basicConfig(level = logging.INFO)
 
 class Selecta:
     """Personalization logic."""
@@ -47,10 +49,12 @@ class Selecta:
         :return:
         track_uris: List[str]
         """
+        logging.info("Generating playlist..")
         if self.recordCollection.record_in_collection(track_name, artist_name):
             lda = LdaModel(self.recordCollection)
             track_recommendation_uris = lda.get_recommendations(track_name, artist_name, num_tracks)
             playlist_name = f"Similar to {track_name} by {artist_name}"
             return self.spotifyService.make_playlist(spotify_id, playlist_name, track_recommendation_uris)
         else:
+            logging.info("This record isn't in the collection.")
             return "This record isn't in the collection, please choose another."

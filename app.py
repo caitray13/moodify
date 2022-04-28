@@ -3,6 +3,7 @@ import os
 from typing import Dict
 
 from flask import Flask, request, render_template
+from flask_cors import CORS, cross_origin
 
 from record_collection import RecordCollection
 from selecta import Selecta
@@ -12,6 +13,8 @@ logging.basicConfig(level = logging.INFO)
 
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 PORT = int(os.getenv('PORT', 5000))
 HOST = os.getenv('HOST', 'localhost')
@@ -41,7 +44,8 @@ def audio_analysis():
     return audio_analysis
 
 
-@app.route("/createplaylist/<type>")
+@app.route("/createplaylist/<type>", methods=['GET', 'POST'])
+@cross_origin()
 def create_playlist(type):
     match type:
         case "moody":
@@ -64,9 +68,9 @@ def create_moody_playlist():
 
 
 def create_lyrics_playlist():
-    track_name = request.args.get('track_name')
-    artist_name = request.args.get('artist_name')
-    num_tracks = request.args.get('num_tracks', type=int)
+    track_name = request.json['track_name']
+    artist_name = request.json['artist_name']
+    num_tracks = int(request.json['num_tracks'])
     return selector.create_similar_lyrics_playlist(spotify_id, track_name, artist_name, num_tracks)    
 
 

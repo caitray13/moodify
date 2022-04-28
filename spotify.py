@@ -1,9 +1,12 @@
+import logging
 from typing import Dict, List
 
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
 from track import Track
+
+logging.basicConfig(level = logging.INFO)
 
 LIMIT = 50
 
@@ -75,6 +78,7 @@ class SpotifyService:
         return saved_tracks_audio_analysis
     
     def make_playlist(self, spotify_id, playlist_name, tracks):
+        logging.info("Making the playlist in Spotify library")
         p_response = self.__create_playlist(spotify_id, playlist_name)
         # need the id (rather than name) to add songs later
         playlist_id = p_response['id']
